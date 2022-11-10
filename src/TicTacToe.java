@@ -6,7 +6,8 @@ public class TicTacToe
     private static final int COL = 3;
     private static String [][] board = new String [ROW][COL];
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         boolean finished = false;
         boolean playing = true;
         Scanner in = new Scanner(System.in);
@@ -35,12 +36,41 @@ public class TicTacToe
                 } while (!isValidMove(row, col));
                 board[row][col] = player;
                 moveCount++;
+
+                if(moveCount >= MOVES_FOR_WIN)
+                {
+                    if (isWin(player))
+                    {
+                        display();
+                        System.out.println("Player " + player + " wins!");
+                        playing = false;
+                    }
+                }
+
+                if(moveCount >= MOVES_FOR_TIE)
+                {
+                    if(isATie())
+                    {
+                       display();
+                        System.out.println("It's a tie!");
+                        playing = false;
+                    }
+                }
+
+                if (player.equals("X"))
+                {
+                    player = "O";
+                }
+                else
+                {
+                    player = "X";
+                }
             }while (playing);
+
+            finished = SafeInput.getYNConfirm(in, "Done Playing?");
         }while(!finished);
 
-        finished = SafeInput.getYNConfirm(in, "Done Playing?");
     }
-
 
     private static void clearBoard()
     {
@@ -123,11 +153,59 @@ public class TicTacToe
         return false;
     }
 
-    private static boolean isATie ()
-    {
+    private static boolean isATie() {
         boolean xFlag = false;
         boolean oFlag = false;
 
-        return xFlag;
+        for (int row = 0; row < ROW; row++) {
+            if (board[row][0].equals("X") || board[row][1].equals("X") || board[row][2].equals("X")) {
+                xFlag = true;
+            }
+            if (board[row][0].equals("O") || board[row][1].equals("O") || board[row][2].equals("O")) {
+                oFlag = true;
+            }
+
+            if (!(xFlag && oFlag)) {
+                return false;
+            }
+
+            xFlag = oFlag = false;
+
+        }
+
+        for (int col = 0; col < COL; col++) {
+            if (board[0][col].equals("O") || board[1][col].equals("O") || board[2][col].equals("O")) {
+                xFlag = true;
+            }
+            if (board[0][col].equals("O") || board[1][col].equals("O") || board[2][col].equals("O")) {
+                oFlag = true;
+            }
+
+            if (!(xFlag && oFlag)) {
+                return false;
+            }
+
+            xFlag = oFlag = false;
+        }
+
+        if (board[0][0].equals("X") || board[1][1].equals("X") || board[2][2].equals("X")) {
+            xFlag = true;
+        }
+        if (board[0][0].equals("O") || board[1][1].equals("O") || board[2][2].equals("O")) {
+            oFlag = true;
+        }
+        if (board[0][2].equals("X") || board[1][1].equals("X") || board[2][0].equals("X")) {
+            xFlag = true;
+        }
+        if (board[0][2].equals("O") || board[1][1].equals("O") || board[2][0].equals("O")) {
+            oFlag = true;
+        }
+
+        if (!(xFlag && oFlag))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
